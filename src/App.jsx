@@ -207,6 +207,17 @@ export default function App() {
         m.id === matchId ? { ...m, winner } : m
       )
     );
+    setRounds((prev) =>
+      prev.map((round, idx) => {
+        if (idx !== roundNum - 1) return round;
+        return {
+          ...round,
+          matches: round.matches.map((m) =>
+            m.id === matchId ? { ...m, winner } : m
+          ),
+        };
+      })
+    );
   }
 
   // Runde abschließen
