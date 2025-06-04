@@ -2,6 +2,66 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { v4 as uuidv4 } from "uuid";
 
+// Kleine Übersicht um Turnierbaum und Ergebnisse anzuzeigen
+function Overview({ rounds, bronzeMatch, finalMatch, winners }) {
+  return (
+    <div className="bg-chamGreen/5 border border-chamGreen/20 rounded-2xl p-4 md:w-64 w-full">
+      <h2 className="text-xl font-bold mb-2 text-chamGreen">Turnierbaum</h2>
+      {rounds.map((r, idx) => (
+        <div key={idx} className="mb-4">
+          <h3 className="font-semibold text-chamGreen mb-1">Runde {idx + 1}</h3>
+          {r.matches.map((m) => (
+            <div key={m.id} className="flex justify-between text-sm">
+              <span>{m.player1.name}</span>
+              <span className="mx-1">vs.</span>
+              <span>{m.player2.name}</span>
+              {m.winner && (
+                <span className="ml-2 text-chamGreen font-bold">🏆 {m.winner.name}</span>
+              )}
+            </div>
+          ))}
+        </div>
+      ))}
+      {bronzeMatch && (
+        <div className="mb-4">
+          <h3 className="font-semibold text-chamGold mb-1">Spiel um Platz 3</h3>
+          <div className="flex justify-between text-sm">
+            <span>{bronzeMatch.player1.name}</span>
+            <span className="mx-1">vs.</span>
+            <span>{bronzeMatch.player2.name}</span>
+            {bronzeMatch.winner && (
+              <span className="ml-2 text-chamGold font-bold">🏅 {bronzeMatch.winner.name}</span>
+            )}
+          </div>
+        </div>
+      )}
+      {finalMatch && (
+        <div className="mb-4">
+          <h3 className="font-semibold text-chamGreen mb-1">Finale</h3>
+          <div className="flex justify-between text-sm">
+            <span>{finalMatch.player1.name}</span>
+            <span className="mx-1">vs.</span>
+            <span>{finalMatch.player2.name}</span>
+            {finalMatch.winner && (
+              <span className="ml-2 text-chamGreen font-bold">🏆 {finalMatch.winner.name}</span>
+            )}
+          </div>
+        </div>
+      )}
+      {winners.length > 0 && (
+        <div>
+          <h3 className="font-semibold text-chamGreen mb-1">Platzierungen</h3>
+          <ol className="list-decimal pl-4 text-sm space-y-1">
+            {winners.map((w, i) => (
+              <li key={i}>{w.name}</li>
+            ))}
+          </ol>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function shuffle(array) {
   let currentIndex = array.length, randomIndex;
   // While there remain elements to shuffle...
@@ -230,6 +290,9 @@ export default function App() {
         <h1 className="text-4xl font-bold text-chamGreen drop-shadow-lg">Chamäleon Tischtennis Turnier</h1>
         <p className="text-chamGold text-xl text-center mt-2">KO-System • Siegerehrung • Live Spaß!</p>
       </header>
+
+      <div className="flex flex-col md:flex-row w-full justify-center items-start gap-8">
+        <div className="flex-1 flex flex-col items-center">
 
       {stage === STAGE.ENTRY && (
         <motion.div
@@ -464,6 +527,15 @@ export default function App() {
           </motion.div>
         </AnimatePresence>
       )}
+
+        </div>
+        <Overview
+          rounds={rounds}
+          bronzeMatch={bronzeMatch}
+          finalMatch={finalMatch}
+          winners={winners}
+        />
+      </div>
 
       <footer className="mt-10 text-chamGreen/60 text-sm">
         &copy; {new Date().getFullYear()} Chamäleon Tischtennis Turnier App
